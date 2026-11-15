@@ -4,34 +4,110 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel Administrativo - ToliTecno</title>
-    <!-- Tailwind CSS para un diseño limpio y profesional -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Supabase JS Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        .bg-custom-primary { background-color: #134989; }
-        .bg-custom-secondary { background-color: #275C98; }
-        .text-custom-accent { color: #4F8AA7; }
-        body { background-color: #F8FAFC; } /* Fondo casi blanco */
+        :root, body.dark-mode {
+            --bg-color: #121212; 
+            --card-bg: #1e1e1e; 
+            --text-color: #f8f9fa; 
+            --border-color: #444;
+            --muted-text: rgba(248,249,250,.60);
+            --glass-bg: rgba(30,30,30,.62); 
+            --glass-bg-strong: rgba(250, 250, 250, 0.04);
+            --glass-border: rgba(255,255,255,.09); 
+            --glass-highlight: rgba(255,255,255,.10);
+            --field-bg: rgba(18,18,18,.62); 
+            --field-border: rgba(255,255,255,.08);
+            --glow: rgba(249,199,48,.42); 
+            --glow-strong: rgba(249,199,48,.65);
+            --shadow: 0 30px 70px rgba(0,0,0,.55); 
+            --grid-line: rgba(249,199,48,.10);
+            --modal-box-bg: rgba(20,20,20,.68);
+            --modal-box-title: #ffffff;
+            --legal-box-bg: rgba(10,14,20,.65);
+            --legal-text-color: rgba(248,249,250,.85);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        .custom-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+        }
+
+        .glass-nav {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .tab-btn {
+            color: var(--muted-text);
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 0 15px var(--glow);
+        }
+
+        table th {
+            color: var(--muted-text);
+            background-color: var(--glass-bg-strong);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        table td {
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        table tr:hover {
+            background-color: rgba(255, 255, 255, 0.02);
+        }
+
+        .modal-content {
+            background-color: var(--modal-box-bg);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(16px);
+        }
+
+        .modal-title {
+            color: var(--modal-box-title);
+        }
+
+        .glow-accent {
+            text-shadow: 0 0 10px var(--glow);
+        }
     </style>
 </head>
-<body class="min-h-screen text-slate-800">
+<body class="dark-mode min-h-screen">
 
     <!-- Header -->
-    <header class="bg-custom-primary text-white shadow-md">
-        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-            <h1 class="text-xl font-bold tracking-wide">Panel Administrativo | ToliTecno</h1>
-            <span class="text-xs bg-custom-secondary px-3 py-1 rounded-full text-slate-100">Conectado a Supabase</span>
+    <header class="glass-nav sticky top-0 z-40 py-4 px-6 flex justify-between items-center">
+        <div class="flex items-center space-x-3">
+            <span class="w-3 h-3 rounded-full bg-amber-400 animate-pulse"></span>
+            <h1 class="text-lg font-bold tracking-wider glow-accent">TOLITECNO | Panel Administrativo</h1>
         </div>
+        <span class="text-xs px-3 py-1 rounded-full border border-amber-400/30 text-amber-300 bg-amber-400/10">Supabase Conectado</span>
     </header>
 
     <!-- Navigation Tabs -->
     <nav class="max-w-7xl mx-auto px-4 mt-6">
-        <div class="flex space-x-2 border-b border-slate-300 pb-2 overflow-x-auto">
-            <button onclick="switchTab('usuarios')" id="btn-usuarios" class="tab-btn px-4 py-2 font-semibold text-white bg-custom-primary rounded-lg transition">Usuarios</button>
-            <button onclick="switchTab('conductores')" id="btn-conductores" class="tab-btn px-4 py-2 font-semibold text-slate-600 hover:bg-slate-200 rounded-lg transition">Conductores</button>
-            <button onclick="switchTab('viajes')" id="btn-viajes" class="tab-btn px-4 py-2 font-semibold text-slate-600 hover:bg-slate-200 rounded-lg transition">Viajes / Servicios</button>
-            <button onclick="switchTab('documentos')" id="btn-documentos" class="tab-btn px-4 py-2 font-semibold text-slate-600 hover:bg-slate-200 rounded-lg transition">Documentos y Vehículos</button>
+        <div class="flex space-x-3 overflow-x-auto pb-2">
+            <button onclick="switchTab('usuarios')" id="btn-usuarios" class="tab-btn active px-5 py-2.5 font-medium rounded-xl text-sm">Usuarios</button>
+            <button onclick="switchTab('conductores')" id="btn-conductores" class="tab-btn px-5 py-2.5 font-medium rounded-xl text-sm">Conductores</button>
+            <button onclick="switchTab('viajes')" id="btn-viajes" class="tab-btn px-5 py-2.5 font-medium rounded-xl text-sm">Viajes / Servicios</button>
+            <button onclick="switchTab('documentos')" id="btn-documentos" class="tab-btn px-5 py-2.5 font-medium rounded-xl text-sm">Documentos y Vehículos</button>
         </div>
     </nav>
 
@@ -39,98 +115,99 @@
     <main class="max-w-7xl mx-auto px-4 py-6">
         
         <!-- Loading Indicator -->
-        <div id="loading" class="text-center py-12 text-slate-500">Cargando información de Supabase...</div>
+        <div id="loading" class="text-center py-20" style="color: var(--muted-text);">Cargando registros desde Supabase...</div>
 
         <!-- Section: Usuarios -->
         <section id="sec-usuarios" class="tab-content space-y-4">
-            <h2 class="text-lg font-bold text-custom-primary">Listado de Usuarios</h2>
-            <div class="bg-white shadow rounded-lg overflow-x-auto">
+            <h2 class="text-base font-semibold text-amber-400">Listado de Usuarios</h2>
+            <div class="custom-card rounded-2xl overflow-x-auto">
                 <table class="w-full text-left border-collapse">
                     <thead>
-                        <tr class="bg-slate-100 text-slate-700 text-sm border-b">
-                            <th class="p-3">Foto</th>
-                            <th class="p-3">Nombre</th>
-                            <th class="p-3">Teléfono</th>
-                            <th class="p-3">Email</th>
-                            <th class="p-3">Tipo</th>
-                            <th class="p-3">Verificado</th>
+                        <tr class="text-xs uppercase tracking-wider">
+                            <th class="p-4">Foto</th>
+                            <th class="p-4">Nombre</th>
+                            <th class="p-4">Teléfono</th>
+                            <th class="p-4">Email</th>
+                            <th class="p-4">Tipo</th>
+                            <th class="p-4">Verificado</th>
                         </tr>
                     </thead>
-                    <tbody id="tabla-usuarios" class="text-sm divide-y divide-slate-200"></tbody>
+                    <tbody id="tabla-usuarios" class="text-sm"></tbody>
                 </table>
             </div>
         </section>
 
         <!-- Section: Conductores -->
         <section id="sec-conductores" class="tab-content hidden space-y-4">
-            <h2 class="text-lg font-bold text-custom-primary">Listado de Conductores</h2>
-            <div class="bg-white shadow rounded-lg overflow-x-auto">
+            <h2 class="text-base font-semibold text-amber-400">Listado de Conductores</h2>
+            <div class="custom-card rounded-2xl overflow-x-auto">
                 <table class="w-full text-left border-collapse">
                     <thead>
-                        <tr class="bg-slate-100 text-slate-700 text-sm border-b">
-                            <th class="p-3">ID Conductor</th>
-                            <th class="p-3">Licencia</th>
-                            <th class="p-3">Acepta Efectivo</th>
-                            <th class="p-3">Acepta Billetera</th>
-                            <th class="p-3">Billetera Info</th>
+                        <tr class="text-xs uppercase tracking-wider">
+                            <th class="p-4">ID Conductor</th>
+                            <th class="p-4">Licencia</th>
+                            <th class="p-4">Efectivo</th>
+                            <th class="p-4">Billetera</th>
+                            <th class="p-4">Detalles Billetera</th>
                         </tr>
                     </thead>
-                    <tbody id="tabla-conductores" class="text-sm divide-y divide-slate-200"></tbody>
+                    <tbody id="tabla-conductores" class="text-sm"></tbody>
                 </table>
             </div>
         </section>
 
         <!-- Section: Viajes -->
         <section id="sec-viajes" class="tab-content hidden space-y-4">
-            <h2 class="text-lg font-bold text-custom-primary">Historial de Viajes y Servicios</h2>
-            <div class="bg-white shadow rounded-lg overflow-x-auto">
+            <h2 class="text-base font-semibold text-amber-400">Historial de Viajes y Servicios</h2>
+            <div class="custom-card rounded-2xl overflow-x-auto">
                 <table class="w-full text-left border-collapse">
                     <thead>
-                        <tr class="bg-slate-100 text-slate-700 text-sm border-b">
-                            <th class="p-3">ID Viaje</th>
-                            <th class="p-3">Servicio</th>
-                            <th class="p-3">Origen</th>
-                            <th class="p-3">Destino</th>
-                            <th class="p-3">Tarifa</th>
-                            <th class="p-3">Estado</th>
+                        <tr class="text-xs uppercase tracking-wider">
+                            <th class="p-4">ID Viaje</th>
+                            <th class="p-4">Servicio</th>
+                            <th class="p-4">Origen</th>
+                            <th class="p-4">Destino</th>
+                            <th class="p-4">Tarifa</th>
+                            <th class="p-4">Estado</th>
                         </tr>
                     </thead>
-                    <tbody id="tabla-viajes" class="text-sm divide-y divide-slate-200"></tbody>
+                    <tbody id="tabla-viajes" class="text-sm"></tbody>
                 </table>
             </div>
         </section>
 
         <!-- Section: Documentos y Vehículos -->
         <section id="sec-documentos" class="tab-content hidden space-y-4">
-            <h2 class="text-lg font-bold text-custom-primary">Documentos de Conductores y Fotos de Vehículos</h2>
-            <div class="bg-white shadow rounded-lg overflow-x-auto">
+            <h2 class="text-base font-semibold text-amber-400">Documentación y Vehículos</h2>
+            <div class="custom-card rounded-2xl overflow-x-auto">
                 <table class="w-full text-left border-collapse">
                     <thead>
-                        <tr class="bg-slate-100 text-slate-700 text-sm border-b">
-                            <th class="p-3">Placa / Vehículo</th>
-                            <th class="p-3">Marca / Modelo</th>
-                            <th class="p-3">DNI / CE</th>
-                            <th class="p-3">Brevete</th>
-                            <th class="p-3">Tarjeta Propiedad</th>
-                            <th class="p-3">Foto Vehículo</th>
+                        <tr class="text-xs uppercase tracking-wider">
+                            <th class="p-4">Placa</th>
+                            <th class="p-4">Vehículo</th>
+                            <th class="p-4">DNI / CE</th>
+                            <th class="p-4">Brevete</th>
+                            <th class="p-4">Tarjeta Propiedad</th>
+                            <th class="p-4">Foto Vehículo</th>
                         </tr>
                     </thead>
-                    <tbody id="tabla-documentos" class="text-sm divide-y divide-slate-200"></tbody>
+                    <tbody id="tabla-documentos" class="text-sm"></tbody>
                 </table>
             </div>
         </section>
 
     </main>
 
-    <!-- Modal para ver imágenes en grande -->
-    <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-70 hidden flex items-center justify-center p-4 z-50" onclick="closeModal()">
-        <div class="bg-white p-4 rounded-lg max-w-lg w-full text-center relative" onclick="event.stopPropagation()">
-            <button onclick="closeModal()" class="absolute top-2 right-3 text-slate-500 hover:text-black font-bold text-xl">&times;</button>
-            <img id="modalImage" src="" alt="Vista previa" class="max-h-[80vh] mx-auto rounded">
+    <!-- Modal para Fotos / Documentos -->
+    <div id="imageModal" class="fixed inset-0 bg-black/80 hidden flex items-center justify-center p-4 z-50 backdrop-blur-sm" onclick="closeModal()">
+        <div class="modal-content p-6 rounded-2xl max-w-lg w-full text-center relative" onclick="event.stopPropagation()">
+            <button onclick="closeModal()" class="absolute top-3 right-4 text-gray-400 hover:text-white text-2xl font-bold">&times;</button>
+            <h3 class="modal-title font-semibold mb-4 text-sm tracking-wide">Vista Previa de Documento</h3>
+            <img id="modalImage" src="" alt="Documento" class="max-h-[75vh] mx-auto rounded-lg border border-white/10">
         </div>
     </div>
 
-    <!-- Script de Conexión y Lógica -->
+    <!-- Lógica de Supabase -->
     <script>
         const SUPABASE_URL = 'https://nagmdmahhxidztyfltak.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5hZ21kbWFoaHhpZHp0eWZsdGFrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQ2Mjg3NDIsImV4cCI6MjExMDIwNDc0Mn0.j4n6UuClZG04oZzlgKNu3rWXmN1P4OJnmqTw2vFvhwE';
@@ -139,25 +216,21 @@
 
         async function cargarDatos() {
             try {
-                // 1. Usuarios
                 const { data: usuarios } = await supabaseClient.from('usuarios').select('*').order('created_at', { ascending: false }).limit(50);
                 renderUsuarios(usuarios || []);
 
-                // 2. Conductores
                 const { data: conductores } = await supabaseClient.from('conductores').select('*').limit(50);
                 renderConductores(conductores || []);
 
-                // 3. Viajes
                 const { data: viajes } = await supabaseClient.from('viajes').select('*').order('created_at', { ascending: false }).limit(50);
                 renderViajes(viajes || []);
 
-                // 4. Documentos / Vehículos
                 const { data: documentos } = await supabaseClient.from('documentos_conductor').select('*').limit(50);
                 renderDocumentos(documentos || []);
 
                 document.getElementById('loading').style.display = 'none';
             } catch (error) {
-                console.error("Error al cargar datos:", error);
+                console.error("Error al conectar con Supabase:", error);
                 document.getElementById('loading').innerText = "Error al conectar con Supabase. Revisa la consola.";
             }
         }
@@ -165,13 +238,13 @@
         function renderUsuarios(data) {
             const tbody = document.getElementById('tabla-usuarios');
             tbody.innerHTML = data.map(u => `
-                <tr class="hover:bg-slate-50">
-                    <td class="p-3"><img src="${u.foto || 'https://via.placeholder.com/40'}" class="w-10 h-10 rounded-full object-cover cursor-pointer border" onclick="openModal('${u.foto}')"></td>
-                    <td class="p-3 font-medium">${u.nombre || 'Sin nombre'}</td>
-                    <td class="p-3">${u.telefono || '-'}</td>
-                    <td class="p-3">${u.email || '-'}</td>
-                    <td class="p-3"><span class="px-2 py-1 bg-slate-200 text-xs rounded">${u.tipo_usuario || 'usuario'}</span></td>
-                    <td class="p-3">${u.verificado ? '✅ Sí' : '❌ No'}</td>
+                <tr class="transition">
+                    <td class="p-4"><img src="${u.foto || 'https://via.placeholder.com/40'}" class="w-10 h-10 rounded-full object-cover cursor-pointer border border-white/10" onclick="openModal('${u.foto}')"></td>
+                    <td class="p-4 font-medium text-white">${u.nombre || 'Sin nombre'}</td>
+                    <td class="p-4" style="color: var(--muted-text);">${u.telefono || '-'}</td>
+                    <td class="p-4" style="color: var(--muted-text);">${u.email || '-'}</td>
+                    <td class="p-4"><span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded-md text-xs">${u.tipo_usuario || 'usuario'}</span></td>
+                    <td class="p-4">${u.verificado ? '🟢 Sí' : '🔴 No'}</td>
                 </tr>
             `).join('');
         }
@@ -179,12 +252,12 @@
         function renderConductores(data) {
             const tbody = document.getElementById('tabla-conductores');
             tbody.innerHTML = data.map(c => `
-                <tr class="hover:bg-slate-50">
-                    <td class="p-3">#${c.id}</td>
-                    <td class="p-3 font-mono">${c.licencia || 'No registrada'}</td>
-                    <td class="p-3">${c.acepta_efectivo ? 'Sí' : 'No'}</td>
-                    <td class="p-3">${c.acepta_billetera ? 'Sí' : 'No'}</td>
-                    <td class="p-3">${c.billetera_nombre ? c.billetera_nombre + ' (' + c.billetera_numero + ')' : '-'}</td>
+                <tr class="transition">
+                    <td class="p-4 font-mono text-amber-400">#${c.id}</td>
+                    <td class="p-4 font-mono text-white">${c.licencia || 'No registrada'}</td>
+                    <td class="p-4">${c.acepta_efectivo ? '✅' : '❌'}</td>
+                    <td class="p-4">${c.acepta_billetera ? '✅' : '❌'}</td>
+                    <td class="p-4" style="color: var(--muted-text);">${c.billetera_nombre ? c.billetera_nombre + ' (' + c.billetera_numero + ')' : '-'}</td>
                 </tr>
             `).join('');
         }
@@ -192,13 +265,13 @@
         function renderViajes(data) {
             const tbody = document.getElementById('tabla-viajes');
             tbody.innerHTML = data.map(v => `
-                <tr class="hover:bg-slate-50">
-                    <td class="p-3 font-mono">#${v.id}</td>
-                    <td class="p-3">${v.tipo_servicio || 'General'}</td>
-                    <td class="p-3 truncate max-w-xs" title="${v.origen_nombre}">${v.origen_nombre || 'N/A'}</td>
-                    <td class="p-3 truncate max-w-xs" title="${v.destino_nombre}">${v.destino_nombre || 'N/A'}</td>
-                    <td class="p-3 font-bold text-emerald-600">$${v.tarifa || '0.00'}</td>
-                    <td class="p-3"><span class="px-2 py-1 text-xs rounded bg-blue-100 text-blue-800">${v.estado || 'creado'}</span></td>
+                <tr class="transition">
+                    <td class="p-4 font-mono text-amber-400">#${v.id}</td>
+                    <td class="p-4 text-white">${v.tipo_servicio || 'General'}</td>
+                    <td class="p-4 truncate max-w-xs" style="color: var(--muted-text);" title="${v.origen_nombre}">${v.origen_nombre || 'N/A'}</td>
+                    <td class="p-4 truncate max-w-xs" style="color: var(--muted-text);" title="${v.destino_nombre}">${v.destino_nombre || 'N/A'}</td>
+                    <td class="p-4 font-bold text-emerald-400">$${v.tarifa || '0.00'}</td>
+                    <td class="p-4"><span class="px-2.5 py-1 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-md text-xs">${v.estado || 'creado'}</span></td>
                 </tr>
             `).join('');
         }
@@ -206,28 +279,23 @@
         function renderDocumentos(data) {
             const tbody = document.getElementById('tabla-documentos');
             tbody.innerHTML = data.map(d => `
-                <tr class="hover:bg-slate-50">
-                    <td class="p-3 font-bold">${d.placa || 'Sin placa'}</td>
-                    <td class="p-3">${d.marca || ''} ${d.modelo || ''} (${d.anio || ''})</td>
-                    <td class="p-3">${d.dni_ce ? `<a href="#" onclick="openModal('${d.dni_ce}'); return false;" class="text-custom-accent underline">Ver DNI</a>` : '-'}</td>
-                    <td class="p-3">${d.brevete ? `<a href="#" onclick="openModal('${d.brevete}'); return false;" class="text-custom-accent underline">Ver Brevete</a>` : '-'}</td>
-                    <td class="p-3">${d.tarjeta_propiedad ? `<a href="#" onclick="openModal('${d.tarjeta_propiedad}'); return false;" class="text-custom-accent underline">Ver Tarjeta</a>` : '-'}</td>
-                    <td class="p-3">${d.foto_vehiculo ? `<img src="${d.foto_vehiculo}" class="w-12 h-8 object-cover rounded cursor-pointer border" onclick="openModal('${d.foto_vehiculo}')">` : '-'}</td>
+                <tr class="transition">
+                    <td class="p-4 font-bold text-white">${d.placa || 'Sin placa'}</td>
+                    <td class="p-4" style="color: var(--muted-text);">${d.marca || ''} ${d.modelo || ''} (${d.anio || ''})</td>
+                    <td class="p-4">${d.dni_ce ? `<a href="#" onclick="openModal('${d.dni_ce}'); return false;" class="text-amber-400 hover:underline">Ver DNI</a>` : '-'}</td>
+                    <td class="p-4">${d.brevete ? `<a href="#" onclick="openModal('${d.brevete}'); return false;" class="text-amber-400 hover:underline">Ver Brevete</a>` : '-'}</td>
+                    <td class="p-4">${d.tarjeta_propiedad ? `<a href="#" onclick="openModal('${d.tarjeta_propiedad}'); return false;" class="text-amber-400 hover:underline">Ver Tarjeta</a>` : '-'}</td>
+                    <td class="p-4">${d.foto_vehiculo ? `<img src="${d.foto_vehiculo}" class="w-12 h-8 object-cover rounded cursor-pointer border border-white/10" onclick="openModal('${d.foto_vehiculo}')">` : '-'}</td>
                 </tr>
             `).join('');
         }
 
         function switchTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('.tab-btn').forEach(el => {
-                el.classList.remove('bg-custom-primary', 'text-white');
-                el.classList.add('text-slate-600', 'hover:bg-slate-200');
-            });
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
 
             document.getElementById(`sec-${tabName}`).classList.remove('hidden');
-            const activeBtn = document.getElementById(`btn-${tabName}`);
-            activeBtn.classList.add('bg-custom-primary', 'text-white');
-            activeBtn.classList.remove('text-slate-600', 'hover:bg-slate-200');
+            document.getElementById(`btn-${tabName}`).classList.add('active');
         }
 
         function openModal(url) {
@@ -240,7 +308,6 @@
             document.getElementById('imageModal').classList.add('hidden');
         }
 
-        // Ejecutar al cargar la página
         window.onload = cargarDatos;
     </script>
 </body>
