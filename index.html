@@ -4,6 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel Administrativo - ToliTecno</title>
+    <!-- PWA Meta Tags (Android & iPhone) -->
+    <meta name="theme-color" content="#121212">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="ToliTecno Admin">
+    <link rel="manifest" href="./manifest.json">
+    <link rel="icon" type="image/png" href="https://i.imgur.com/RvPnAM0.png">
+    <link rel="apple-touch-icon" href="./icon-192.png">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Supabase JS Client -->
@@ -18,17 +27,10 @@
             --glass-bg: rgba(30,30,30,.62); 
             --glass-bg-strong: rgba(250, 250, 250, 0.04);
             --glass-border: rgba(255,255,255,.09); 
-            --glass-highlight: rgba(255,255,255,.10);
-            --field-bg: rgba(18,18,18,.62); 
-            --field-border: rgba(255,255,255,.08);
             --glow: rgba(249,199,48,.42); 
-            --glow-strong: rgba(249,199,48,.65);
             --shadow: 0 30px 70px rgba(0,0,0,.55); 
-            --grid-line: rgba(249,199,48,.10);
-            --modal-box-bg: rgba(20,20,20,.68);
+            --modal-box-bg: rgba(20,20,20,.85);
             --modal-box-title: #ffffff;
-            --legal-box-bg: rgba(10,14,20,.65);
-            --legal-text-color: rgba(248,249,250,.85);
         }
 
         body {
@@ -68,10 +70,11 @@
 
         table td {
             border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
         }
 
         table tr:hover {
-            background-color: rgba(255, 255, 255, 0.02);
+            background-color: rgba(255, 255, 255, 0.03);
         }
 
         .modal-content {
@@ -81,28 +84,69 @@
             backdrop-filter: blur(16px);
         }
 
-        .modal-title {
-            color: var(--modal-box-title);
-        }
-
         .glow-accent {
             text-shadow: 0 0 10px var(--glow);
         }
+
+        .logo-badge {
+            position: relative;
+            background: radial-gradient(circle at 30% 30%, rgba(249, 199, 48, 0.22), rgba(20, 20, 20, 0.92));
+            border: 1px solid rgba(249, 199, 48, 0.45);
+            box-shadow: 0 0 18px var(--glow), inset 0 0 12px rgba(249, 199, 48, 0.14);
+            transition: transform 0.35s ease, box-shadow 0.35s ease;
+        }
+
+        .logo-badge:hover {
+            transform: scale(1.06) rotate(-2deg);
+            box-shadow: 0 0 26px rgba(249, 199, 48, 0.65), inset 0 0 16px rgba(249, 199, 48, 0.22);
+        }
+
+        .logo-watermark {
+            position: fixed;
+            bottom: 1.25rem;
+            right: 1.25rem;
+            width: 110px;
+            height: 110px;
+            opacity: 0.06;
+            pointer-events: none;
+            user-select: none;
+            z-index: 0;
+            filter: drop-shadow(0 0 18px var(--glow));
+        }
+
+        .pwa-btn-install {
+            background: linear-gradient(135deg, #f9c730 0%, #f59e0b 100%);
+            color: #121212;
+            box-shadow: 0 0 20px var(--glow);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .pwa-btn-install:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 0 28px rgba(249, 199, 48, 0.65);
+        }
     </style>
 </head>
-<body class="dark-mode min-h-screen">
+<body class="dark-mode min-h-screen relative">
+
+    <!-- Marca de agua creativa del logo -->
+    <img src="https://i.imgur.com/RvPnAM0.png" alt="" aria-hidden="true" class="logo-watermark object-contain">
 
     <!-- Header -->
-    <header class="glass-nav sticky top-0 z-40 py-4 px-6 flex justify-between items-center">
-        <div class="flex items-center space-x-3">
-            <span class="w-3 h-3 rounded-full bg-amber-400 animate-pulse"></span>
-            <h1 class="text-lg font-bold tracking-wider glow-accent">TOLITECNO | Panel Administrativo</h1>
+    <header class="glass-nav sticky top-0 z-40 py-3.5 px-6 flex justify-between items-center">
+        <div class="flex items-center space-x-3.5">
+            <div class="logo-badge w-11 h-11 rounded-2xl p-1.5 flex items-center justify-center shrink-0">
+                <img src="https://i.imgur.com/RvPnAM0.png" alt="Logo ToliTecno" class="w-full h-full object-contain rounded-xl">
+            </div>
+            <div class="flex items-center space-x-2.5">
+                <span class="w-3 h-3 rounded-full bg-amber-400 animate-pulse shrink-0"></span>
+                <h1 class="text-lg font-bold tracking-wider glow-accent">TOLITECNO | Panel Administrativo Global</h1>
+            </div>
         </div>
-        <span class="text-xs px-3 py-1 rounded-full border border-amber-400/30 text-amber-300 bg-amber-400/10">Supabase Conectado</span>
     </header>
 
     <!-- Navigation Tabs -->
-    <nav class="max-w-7xl mx-auto px-4 mt-6">
+    <nav class="max-w-7xl mx-auto px-4 mt-6 relative z-10">
         <div class="flex space-x-3 overflow-x-auto pb-2">
             <button onclick="switchTab('usuarios')" id="btn-usuarios" class="tab-btn active px-5 py-2.5 font-medium rounded-xl text-sm">Usuarios</button>
             <button onclick="switchTab('conductores')" id="btn-conductores" class="tab-btn px-5 py-2.5 font-medium rounded-xl text-sm">Conductores</button>
@@ -112,43 +156,102 @@
     </nav>
 
     <!-- Main Container -->
-    <main class="max-w-7xl mx-auto px-4 py-6">
+    <main class="max-w-7xl mx-auto px-4 py-6 space-y-6 relative z-10">
         
-        <!-- Loading Indicator -->
-        <div id="loading" class="text-center py-20" style="color: var(--muted-text);">Cargando registros desde Supabase...</div>
+        <!-- Tarjetas de Estadísticas -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="custom-card p-4 rounded-2xl border-l-4 border-amber-400">
+                <p class="text-xs uppercase tracking-wider" style="color: var(--muted-text);">Total Usuarios</p>
+                <p id="stat-usuarios" class="text-2xl font-bold mt-1">0</p>
+            </div>
+            <div class="custom-card p-4 rounded-2xl border-l-4 border-blue-400">
+                <p class="text-xs uppercase tracking-wider" style="color: var(--muted-text);">Total Conductores</p>
+                <p id="stat-conductores" class="text-2xl font-bold mt-1">0</p>
+            </div>
+            <div class="custom-card p-4 rounded-2xl border-l-4 border-emerald-400">
+                <p class="text-xs uppercase tracking-wider" style="color: var(--muted-text);">Total Viajes</p>
+                <p id="stat-viajes" class="text-2xl font-bold mt-1">0</p>
+            </div>
+            <div class="custom-card p-4 rounded-2xl border-l-4 border-purple-400">
+                <p class="text-xs uppercase tracking-wider" style="color: var(--muted-text);">Vehículos Registrados</p>
+                <p id="stat-vehiculos" class="text-2xl font-bold mt-1">0</p>
+            </div>
+        </div>
 
-        <!-- Section: Usuarios -->
-        <section id="sec-usuarios" class="tab-content space-y-4">
-            <h2 class="text-base font-semibold text-amber-400">Listado de Usuarios</h2>
-            <div class="custom-card rounded-2xl overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="text-xs uppercase tracking-wider">
-                            <th class="p-4">Foto</th>
-                            <th class="p-4">Nombre</th>
-                            <th class="p-4">Teléfono</th>
-                            <th class="p-4">Email</th>
-                            <th class="p-4">Tipo</th>
-                            <th class="p-4">Verificado</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabla-usuarios" class="text-sm"></tbody>
-                </table>
+        <!-- Barra de Búsqueda y Filtros -->
+        <div class="custom-card p-4 rounded-2xl flex flex-col md:flex-row gap-4 items-center justify-between">
+            <input type="text" id="searchInput" oninput="filtrarDatos()" placeholder="Buscar por nombre, placa, teléfono o correo..." class="w-full md:w-96 px-4 py-2 rounded-xl bg-black/30 border border-white/10 text-sm focus:outline-none focus:border-amber-400">
+            <span class="text-xs" style="color: var(--muted-text);">Haz clic en cualquier celda para ver la información detallada completa.</span>
+        </div>
+
+        <!-- Loading Indicator -->
+        <div id="loading" class="text-center py-20" style="color: var(--muted-text);">Cargando gran volumen de datos desde Supabase...</div>
+
+        <!-- Section: Usuarios (Tabla de Pasajeros y Tabla de Conductores) -->
+        <section id="sec-usuarios" class="tab-content space-y-6">
+            <!-- Tabla de Pasajeros -->
+            <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-base font-semibold text-amber-400">Listado de Pasajeros</h2>
+                    <span id="count-pasajeros" class="text-xs px-2.5 py-1 rounded-lg bg-white/5 border border-white/10" style="color: var(--muted-text);">0 registros</span>
+                </div>
+                <div class="custom-card rounded-2xl overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="text-xs uppercase tracking-wider">
+                                <th class="p-4">Foto</th>
+                                <th class="p-4">ID / Auth</th>
+                                <th class="p-4">Nombre</th>
+                                <th class="p-4">Teléfono</th>
+                                <th class="p-4">Email</th>
+                                <th class="p-4">Tipo</th>
+                                <th class="p-4">Última Conexión</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-pasajeros" class="text-sm"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tabla de Conductores (Usuarios) -->
+            <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-base font-semibold text-amber-400">Listado de Conductores (Usuarios)</h2>
+                    <span id="count-usuarios-conductores" class="text-xs px-2.5 py-1 rounded-lg bg-white/5 border border-white/10" style="color: var(--muted-text);">0 registros</span>
+                </div>
+                <div class="custom-card rounded-2xl overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="text-xs uppercase tracking-wider">
+                                <th class="p-4">Foto</th>
+                                <th class="p-4">ID / Auth</th>
+                                <th class="p-4">Nombre</th>
+                                <th class="p-4">Teléfono</th>
+                                <th class="p-4">Email</th>
+                                <th class="p-4">Tipo</th>
+                                <th class="p-4">Última Conexión</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-usuarios-conductores" class="text-sm"></tbody>
+                    </table>
+                </div>
             </div>
         </section>
 
         <!-- Section: Conductores -->
         <section id="sec-conductores" class="tab-content hidden space-y-4">
-            <h2 class="text-base font-semibold text-amber-400">Listado de Conductores</h2>
+            <h2 class="text-base font-semibold text-amber-400">Listado Completo de Conductores</h2>
             <div class="custom-card rounded-2xl overflow-x-auto">
                 <table class="w-full text-left border-collapse">
                     <thead>
                         <tr class="text-xs uppercase tracking-wider">
-                            <th class="p-4">ID Conductor</th>
-                            <th class="p-4">Licencia</th>
+                            <th class="p-4">ID</th>
+                            <th class="p-4">Usuario ID</th>
+                            <th class="p-4">Licencia / Brevete</th>
                             <th class="p-4">Efectivo</th>
                             <th class="p-4">Billetera</th>
-                            <th class="p-4">Detalles Billetera</th>
+                            <th class="p-4">Nombre Billetera</th>
+                            <th class="p-4">Número Billetera</th>
                         </tr>
                     </thead>
                     <tbody id="tabla-conductores" class="text-sm"></tbody>
@@ -158,16 +261,19 @@
 
         <!-- Section: Viajes -->
         <section id="sec-viajes" class="tab-content hidden space-y-4">
-            <h2 class="text-base font-semibold text-amber-400">Historial de Viajes y Servicios</h2>
+            <h2 class="text-base font-semibold text-amber-400">Historial y Estado de Viajes / Servicios</h2>
             <div class="custom-card rounded-2xl overflow-x-auto">
                 <table class="w-full text-left border-collapse">
                     <thead>
                         <tr class="text-xs uppercase tracking-wider">
-                            <th class="p-4">ID Viaje</th>
+                            <th class="p-4">ID</th>
                             <th class="p-4">Servicio</th>
+                            <th class="p-4">Pasajero</th>
+                            <th class="p-4">Conductor</th>
                             <th class="p-4">Origen</th>
                             <th class="p-4">Destino</th>
                             <th class="p-4">Tarifa</th>
+                            <th class="p-4">Distancia/Duración</th>
                             <th class="p-4">Estado</th>
                         </tr>
                     </thead>
@@ -178,17 +284,19 @@
 
         <!-- Section: Documentos y Vehículos -->
         <section id="sec-documentos" class="tab-content hidden space-y-4">
-            <h2 class="text-base font-semibold text-amber-400">Documentación y Vehículos</h2>
+            <h2 class="text-base font-semibold text-amber-400">Documentación Integral y Vehículos</h2>
             <div class="custom-card rounded-2xl overflow-x-auto">
                 <table class="w-full text-left border-collapse">
                     <thead>
                         <tr class="text-xs uppercase tracking-wider">
                             <th class="p-4">Placa</th>
-                            <th class="p-4">Vehículo</th>
+                            <th class="p-4">Vehículo (Marca/Modelo/Año)</th>
+                            <th class="p-4">Servicio</th>
                             <th class="p-4">DNI / CE</th>
-                            <th class="p-4">Brevete</th>
+                            <th class="p-4">Brevete Doc</th>
                             <th class="p-4">Tarjeta Propiedad</th>
                             <th class="p-4">Foto Vehículo</th>
+                            <th class="p-4">Revisión Técnica</th>
                         </tr>
                     </thead>
                     <tbody id="tabla-documentos" class="text-sm"></tbody>
@@ -198,96 +306,256 @@
 
     </main>
 
-    <!-- Modal para Fotos / Documentos -->
-    <div id="imageModal" class="fixed inset-0 bg-black/80 hidden flex items-center justify-center p-4 z-50 backdrop-blur-sm" onclick="closeModal()">
-        <div class="modal-content p-6 rounded-2xl max-w-lg w-full text-center relative" onclick="event.stopPropagation()">
-            <button onclick="closeModal()" class="absolute top-3 right-4 text-gray-400 hover:text-white text-2xl font-bold">&times;</button>
-            <h3 class="modal-title font-semibold mb-4 text-sm tracking-wide">Vista Previa de Documento</h3>
-            <img id="modalImage" src="" alt="Documento" class="max-h-[75vh] mx-auto rounded-lg border border-white/10">
+    <!-- Modal de Información Completa por Celda / Registro -->
+    <div id="infoModal" class="fixed inset-0 bg-black/80 hidden flex items-center justify-center p-4 z-50 backdrop-blur-sm" onclick="closeModal()">
+        <div class="modal-content p-6 rounded-2xl max-w-2xl w-full relative max-h-[85vh] overflow-y-auto" onclick="event.stopPropagation()">
+            <button onclick="closeModal()" class="absolute top-4 right-5 text-gray-400 hover:text-white text-2xl font-bold">&times;</button>
+            <h3 class="text-lg font-bold text-amber-400 mb-4">Detalle Completo del Registro</h3>
+            <div id="modalBody" class="space-y-3 text-sm text-slate-200"></div>
         </div>
     </div>
 
-    <!-- Lógica de Supabase -->
+    <!-- Popup Alerta de Instalación PWA (Android y iPhone) -->
+    <div id="pwaInstallModal" class="fixed inset-0 bg-black/75 hidden flex items-center justify-center p-4 z-50 backdrop-blur-sm">
+        <div class="modal-content p-6 rounded-2xl max-w-md w-full relative border border-amber-400/30">
+            <div class="flex items-center space-x-4 mb-4">
+                <div class="logo-badge w-16 h-16 rounded-2xl p-2 flex items-center justify-center shrink-0">
+                    <img src="https://i.imgur.com/RvPnAM0.png" alt="ToliTecno App" class="w-full h-full object-contain rounded-xl">
+                </div>
+                <div>
+                    <span class="inline-block text-[11px] uppercase tracking-wider px-2 py-0.5 rounded-md bg-amber-400/15 text-amber-400 border border-amber-400/30 font-semibold mb-1">Android &amp; iPhone</span>
+                    <h3 class="text-base font-bold text-white leading-tight">Instalar ToliTecno Admin</h3>
+                    <p class="text-xs mt-0.5" style="color: var(--muted-text);">Accede más rápido desde tu pantalla de inicio.</p>
+                </div>
+            </div>
+
+            <p id="pwaMessage" class="text-sm text-slate-200 leading-relaxed mb-4">
+                Instala la plataforma administrativa de <strong class="text-amber-400">ToliTecno</strong> en tu dispositivo Android o iPhone para abrirla como aplicación directa en pantalla completa.
+            </p>
+
+            <!-- Instrucciones dinámicas para iPhone (iOS) o instalación manual -->
+            <div id="pwaIosInstructions" class="hidden mb-4 p-3.5 rounded-xl bg-white/5 border border-amber-400/25 text-xs text-slate-200 space-y-2">
+                <p class="font-semibold text-amber-400">Para completar la instalación en tu iPhone (Safari):</p>
+                <ol class="list-decimal list-inside space-y-1.5" style="color: var(--muted-text);">
+                    <li>Toca el botón <strong class="text-white">Compartir</strong> (cuadro con flecha hacia arriba) en la barra de Safari.</li>
+                    <li>Desliza hacia abajo y selecciona <strong class="text-white">"Agregar a pantalla de inicio"</strong>.</li>
+                    <li>Pulsa <strong class="text-white">"Agregar"</strong> arriba a la derecha.</li>
+                </ol>
+            </div>
+
+            <div id="pwaManualInstructions" class="hidden mb-4 p-3.5 rounded-xl bg-white/5 border border-amber-400/25 text-xs text-slate-200 space-y-1.5">
+                <p class="font-semibold text-amber-400">Instalación en tu navegador:</p>
+                <p style="color: var(--muted-text);">Abre el menú de tu navegador (<strong class="text-white">⋮</strong>) y selecciona <strong class="text-white">"Instalar aplicación"</strong> o <strong class="text-white">"Agregar a la pantalla principal"</strong>.</p>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-3 mt-5">
+                <button id="btnPwaInstalar" onclick="instalarPlataformaPWA()" class="pwa-btn-install flex-1 py-2.5 px-4 rounded-xl font-bold text-sm cursor-pointer">
+                    Instalar
+                </button>
+                <button id="btnPwaAhoraNo" onclick="cerrarPopupInstalacion()" class="flex-1 py-2.5 px-4 rounded-xl font-medium text-sm bg-white/5 hover:bg-white/10 border border-white/10 text-slate-200 transition cursor-pointer">
+                    Ahora no
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lógica JavaScript -->
     <script>
         const SUPABASE_URL = 'https://nagmdmahhxidztyfltak.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5hZ21kbWFoaHhpZHp0eWZsdGFrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQ2Mjg3NDIsImV4cCI6MjExMDIwNDc0Mn0.j4n6UuClZG04oZzlgKNu3rWXmN1P4OJnmqTw2vFvhwE';
 
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+        let cacheDatos = { usuarios: [], conductores: [], viajes: [], documentos: [] };
+        const FALLBACK_AVATAR = 'https://i.imgur.com/RvPnAM0.png';
+
+        function escaparAtributoJSON(obj) {
+            return JSON.stringify(obj)
+                .replace(/&/g, '&amp;')
+                .replace(/'/g, '&#39;')
+                .replace(/"/g, '&quot;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+        }
+
+        function obtenerNombrePasajero(pasajeroId) {
+            if (!pasajeroId) return 'Sin asignar';
+            const usuario = cacheDatos.usuarios.find(u => u.id === pasajeroId);
+            return usuario ? (usuario.nombre || 'Sin nombre') : `ID #${pasajeroId}`;
+        }
+
+        function obtenerNombreConductor(conductorId) {
+            if (!conductorId) return 'Sin asignar';
+            const conductor = cacheDatos.conductores.find(c => c.id === conductorId);
+            if (conductor) {
+                const usuario = cacheDatos.usuarios.find(u => u.id === conductor.usuario_id);
+                if (usuario) return usuario.nombre || 'Sin nombre';
+            }
+            const usuarioDirecto = cacheDatos.usuarios.find(
+                u => u.id === conductorId && (u.tipo_usuario || '').toLowerCase() === 'conductor'
+            );
+            return usuarioDirecto ? (usuarioDirecto.nombre || 'Sin nombre') : `Conductor #${conductorId}`;
+        }
+
         async function cargarDatos() {
             try {
-                const { data: usuarios } = await supabaseClient.from('usuarios').select('*').order('created_at', { ascending: false }).limit(50);
-                renderUsuarios(usuarios || []);
+                const [resU, resC, resV, resD] = await Promise.all([
+                    supabaseClient.from('usuarios').select('*').order('created_at', { ascending: false }).limit(200),
+                    supabaseClient.from('conductores').select('*').limit(200),
+                    supabaseClient.from('viajes').select('*').order('created_at', { ascending: false }).limit(200),
+                    supabaseClient.from('documentos_conductor').select('*').limit(200)
+                ]);
 
-                const { data: conductores } = await supabaseClient.from('conductores').select('*').limit(50);
-                renderConductores(conductores || []);
+                cacheDatos.usuarios = resU.data || [];
+                cacheDatos.conductores = resC.data || [];
+                cacheDatos.viajes = resV.data || [];
+                cacheDatos.documentos = resD.data || [];
 
-                const { data: viajes } = await supabaseClient.from('viajes').select('*').order('created_at', { ascending: false }).limit(50);
-                renderViajes(viajes || []);
+                // Actualizar Estadísticas
+                document.getElementById('stat-usuarios').innerText = cacheDatos.usuarios.length;
+                document.getElementById('stat-conductores').innerText = cacheDatos.conductores.length;
+                document.getElementById('stat-viajes').innerText = cacheDatos.viajes.length;
+                document.getElementById('stat-vehiculos').innerText = cacheDatos.documentos.length;
 
-                const { data: documentos } = await supabaseClient.from('documentos_conductor').select('*').limit(50);
-                renderDocumentos(documentos || []);
-
+                renderizarTodo(cacheDatos);
                 document.getElementById('loading').style.display = 'none';
             } catch (error) {
-                console.error("Error al conectar con Supabase:", error);
-                document.getElementById('loading').innerText = "Error al conectar con Supabase. Revisa la consola.";
+                console.error("Error al cargar Supabase:", error);
+                document.getElementById('loading').innerText = "Error al conectar con Supabase.";
             }
         }
 
-        function renderUsuarios(data) {
-            const tbody = document.getElementById('tabla-usuarios');
-            tbody.innerHTML = data.map(u => `
-                <tr class="transition">
-                    <td class="p-4"><img src="${u.foto || 'https://via.placeholder.com/40'}" class="w-10 h-10 rounded-full object-cover cursor-pointer border border-white/10" onclick="openModal('${u.foto}')"></td>
+        function renderizarTodo(data) {
+            renderUsuarios(data.usuarios);
+            renderConductores(data.conductores);
+            renderViajes(data.viajes);
+            renderDocumentos(data.documentos);
+        }
+
+        function crearFilasUsuarios(lista, textoVacio) {
+            if (!lista.length) {
+                return `<tr><td colspan="7" class="p-6 text-center text-xs" style="color: var(--muted-text);">${textoVacio}</td></tr>`;
+            }
+            return lista.map(u => `
+                <tr onclick="mostrarDetalle(${escaparAtributoJSON(u)})">
+                    <td class="p-4"><img src="${u.foto || FALLBACK_AVATAR}" onerror="this.src='${FALLBACK_AVATAR}'" class="w-10 h-10 rounded-full object-cover border border-white/10"></td>
+                    <td class="p-4 font-mono text-xs text-amber-400">#${u.id}</td>
                     <td class="p-4 font-medium text-white">${u.nombre || 'Sin nombre'}</td>
                     <td class="p-4" style="color: var(--muted-text);">${u.telefono || '-'}</td>
                     <td class="p-4" style="color: var(--muted-text);">${u.email || '-'}</td>
                     <td class="p-4"><span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded-md text-xs">${u.tipo_usuario || 'usuario'}</span></td>
-                    <td class="p-4">${u.verificado ? '🟢 Sí' : '🔴 No'}</td>
+                    <td class="p-4 text-xs" style="color: var(--muted-text);">${u.ultima_conexion ? new Date(u.ultima_conexion).toLocaleString() : '-'}</td>
                 </tr>
             `).join('');
+        }
+
+        function renderUsuarios(data) {
+            const conductoresUsuarios = data.filter(u => (u.tipo_usuario || '').toLowerCase() === 'conductor');
+            const pasajeros = data.filter(u => (u.tipo_usuario || '').toLowerCase() !== 'conductor');
+
+            const tbodyPasajeros = document.getElementById('tabla-pasajeros');
+            const tbodyConductores = document.getElementById('tabla-usuarios-conductores');
+
+            document.getElementById('count-pasajeros').innerText = `${pasajeros.length} registro${pasajeros.length === 1 ? '' : 's'}`;
+            document.getElementById('count-usuarios-conductores').innerText = `${conductoresUsuarios.length} registro${conductoresUsuarios.length === 1 ? '' : 's'}`;
+
+            tbodyPasajeros.innerHTML = crearFilasUsuarios(pasajeros, 'No hay pasajeros registrados.');
+            tbodyConductores.innerHTML = crearFilasUsuarios(conductoresUsuarios, 'No hay conductores registrados.');
         }
 
         function renderConductores(data) {
             const tbody = document.getElementById('tabla-conductores');
             tbody.innerHTML = data.map(c => `
-                <tr class="transition">
+                <tr onclick="mostrarDetalle(${escaparAtributoJSON(c)})">
                     <td class="p-4 font-mono text-amber-400">#${c.id}</td>
+                    <td class="p-4 font-mono">#${c.usuario_id || '-'}</td>
                     <td class="p-4 font-mono text-white">${c.licencia || 'No registrada'}</td>
-                    <td class="p-4">${c.acepta_efectivo ? '✅' : '❌'}</td>
-                    <td class="p-4">${c.acepta_billetera ? '✅' : '❌'}</td>
-                    <td class="p-4" style="color: var(--muted-text);">${c.billetera_nombre ? c.billetera_nombre + ' (' + c.billetera_numero + ')' : '-'}</td>
+                    <td class="p-4">${c.acepta_efectivo ? '✅ Sí' : '❌ No'}</td>
+                    <td class="p-4">${c.acepta_billetera ? '✅ Sí' : '❌ No'}</td>
+                    <td class="p-4">${c.billetera_nombre || '-'}</td>
+                    <td class="p-4 font-mono">${c.billetera_numero || '-'}</td>
                 </tr>
             `).join('');
         }
 
         function renderViajes(data) {
             const tbody = document.getElementById('tabla-viajes');
-            tbody.innerHTML = data.map(v => `
-                <tr class="transition">
+            tbody.innerHTML = data.map(v => {
+                let estadoColor = 'bg-blue-500/10 text-blue-400 border-blue-500/20';
+                const estadoLower = (v.estado || '').toLowerCase();
+                if (estadoLower.includes('terminado') || estadoLower.includes('completado') || estadoLower.includes('finalizado')) {
+                    estadoColor = 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30';
+                } else if (estadoLower.includes('cancelado') || estadoLower.includes('rechazado')) {
+                    estadoColor = 'bg-rose-500/20 text-rose-400 border-rose-500/30';
+                }
+
+                const nombrePasajero = obtenerNombrePasajero(v.pasajero_id);
+                const nombreConductor = obtenerNombreConductor(v.conductor_id);
+                const detalleViaje = Object.assign({}, v, {
+                    pasajero_nombre: nombrePasajero,
+                    conductor_nombre: nombreConductor
+                });
+
+                return `
+                <tr onclick="mostrarDetalle(${escaparAtributoJSON(detalleViaje)})">
                     <td class="p-4 font-mono text-amber-400">#${v.id}</td>
-                    <td class="p-4 text-white">${v.tipo_servicio || 'General'}</td>
-                    <td class="p-4 truncate max-w-xs" style="color: var(--muted-text);" title="${v.origen_nombre}">${v.origen_nombre || 'N/A'}</td>
-                    <td class="p-4 truncate max-w-xs" style="color: var(--muted-text);" title="${v.destino_nombre}">${v.destino_nombre || 'N/A'}</td>
+                    <td class="p-4 text-white">${v.tipo_servicio || v.nombre_servicio || 'General'}</td>
+                    <td class="p-4 font-medium text-white">${nombrePasajero}</td>
+                    <td class="p-4 ${v.conductor_id ? 'font-medium text-amber-300' : 'italic'}" style="${v.conductor_id ? '' : 'color: var(--muted-text);'}">${nombreConductor}</td>
+                    <td class="p-4 truncate max-w-xs" style="color: var(--muted-text);">${v.origen_nombre || 'N/A'}</td>
+                    <td class="p-4 truncate max-w-xs" style="color: var(--muted-text);">${v.destino_nombre || 'N/A'}</td>
                     <td class="p-4 font-bold text-emerald-400">$${v.tarifa || '0.00'}</td>
-                    <td class="p-4"><span class="px-2.5 py-1 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-md text-xs">${v.estado || 'creado'}</span></td>
+                    <td class="p-4 text-xs" style="color: var(--muted-text);">${v.distancia_km || 0} km (${v.duracion_min || 0} min)</td>
+                    <td class="p-4"><span class="px-2.5 py-1 border rounded-md text-xs font-semibold ${estadoColor}">${v.estado || 'creado'}</span></td>
                 </tr>
-            `).join('');
+            `;}).join('');
         }
 
         function renderDocumentos(data) {
             const tbody = document.getElementById('tabla-documentos');
             tbody.innerHTML = data.map(d => `
-                <tr class="transition">
-                    <td class="p-4 font-bold text-white">${d.placa || 'Sin placa'}</td>
+                <tr onclick="mostrarDetalle(${escaparAtributoJSON(d)})">
+                    <td class="p-4 font-bold text-amber-400">${d.placa || 'Sin placa'}</td>
                     <td class="p-4" style="color: var(--muted-text);">${d.marca || ''} ${d.modelo || ''} (${d.anio || ''})</td>
-                    <td class="p-4">${d.dni_ce ? `<a href="#" onclick="openModal('${d.dni_ce}'); return false;" class="text-amber-400 hover:underline">Ver DNI</a>` : '-'}</td>
-                    <td class="p-4">${d.brevete ? `<a href="#" onclick="openModal('${d.brevete}'); return false;" class="text-amber-400 hover:underline">Ver Brevete</a>` : '-'}</td>
-                    <td class="p-4">${d.tarjeta_propiedad ? `<a href="#" onclick="openModal('${d.tarjeta_propiedad}'); return false;" class="text-amber-400 hover:underline">Ver Tarjeta</a>` : '-'}</td>
-                    <td class="p-4">${d.foto_vehiculo ? `<img src="${d.foto_vehiculo}" class="w-12 h-8 object-cover rounded cursor-pointer border border-white/10" onclick="openModal('${d.foto_vehiculo}')">` : '-'}</td>
+                    <td class="p-4">${d.tipo_servicio || '-'}</td>
+                    <td class="p-4">${d.dni_ce ? '<span class="text-emerald-400 font-semibold">Subido 📄</span>' : '<span class="text-rose-400">Pendiente</span>'}</td>
+                    <td class="p-4">${d.brevete ? '<span class="text-emerald-400 font-semibold">Subido 📄</span>' : '<span class="text-rose-400">Pendiente</span>'}</td>
+                    <td class="p-4">${d.tarjeta_propiedad ? '<span class="text-emerald-400 font-semibold">Subido 📄</span>' : '<span class="text-rose-400">Pendiente</span>'}</td>
+                    <td class="p-4">${d.foto_vehiculo ? `<img src="${d.foto_vehiculo}" class="w-12 h-8 object-cover rounded border border-white/10">` : '-'}</td>
+                    <td class="p-4">${d.revision_tecnica ? '<span class="text-emerald-400 font-semibold">Subido 📄</span>' : '-'}</td>
                 </tr>
             `).join('');
+        }
+
+        function filtrarDatos() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const filtradosU = cacheDatos.usuarios.filter(u => (u.nombre || '').toLowerCase().includes(query) || (u.telefono || '').includes(query) || (u.email || '').toLowerCase().includes(query));
+            const filtradosC = cacheDatos.conductores.filter(c => (c.licencia || '').toLowerCase().includes(query) || String(c.id).includes(query));
+            const filtradosV = cacheDatos.viajes.filter(v =>
+                (v.origen_nombre || '').toLowerCase().includes(query) ||
+                (v.destino_nombre || '').toLowerCase().includes(query) ||
+                String(v.id).includes(query) ||
+                obtenerNombrePasajero(v.pasajero_id).toLowerCase().includes(query) ||
+                obtenerNombreConductor(v.conductor_id).toLowerCase().includes(query)
+            );
+            const filtradosD = cacheDatos.documentos.filter(d => (d.placa || '').toLowerCase().includes(query) || (d.marca || '').toLowerCase().includes(query) || (d.modelo || '').toLowerCase().includes(query));
+
+            renderUsuarios(filtradosU);
+            renderConductores(filtradosC);
+            renderViajes(filtradosV);
+            renderDocumentos(filtradosD);
+        }
+
+        function mostrarDetalle(objeto) {
+            const modalBody = document.getElementById('modalBody');
+            modalBody.innerHTML = Object.entries(objeto).map(([key, value]) => {
+                let valHtml = value;
+                if (typeof value === 'string' && (value.startsWith('http://') || value.startsWith('https://'))) {
+                    valHtml = `<a href="${value}" target="_blank" class="text-amber-400 underline break-all">${value}</a><br><img src="${value}" class="mt-2 max-h-40 rounded border border-white/10">`;
+                }
+                return `<div class="p-2 bg-white/5 rounded-lg border border-white/5"><strong class="text-amber-400">${key}:</strong> <span class="break-all">${valHtml}</span></div>`;
+            }).join('');
+            document.getElementById('infoModal').classList.remove('hidden');
         }
 
         function switchTab(tabName) {
@@ -298,17 +566,106 @@
             document.getElementById(`btn-${tabName}`).classList.add('active');
         }
 
-        function openModal(url) {
-            if (!url) return;
-            document.getElementById('modalImage').src = url;
-            document.getElementById('imageModal').classList.remove('hidden');
-        }
-
         function closeModal() {
-            document.getElementById('imageModal').classList.add('hidden');
+            document.getElementById('infoModal').classList.add('hidden');
         }
 
-        window.onload = cargarDatos;
+        // ============================================================
+        // PWA: Registro Service Worker + Popup de Instalación (Android & iPhone)
+        // ============================================================
+        let deferredInstallPrompt = null;
+
+        function esDispositivoIOS() {
+            return /iphone|ipad|ipod/i.test(window.navigator.userAgent) ||
+                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        }
+
+        function estaInstaladaPWA() {
+            const esStandalone =
+                window.matchMedia('(display-mode: standalone)').matches ||
+                window.navigator.standalone === true;
+
+            if (esStandalone) {
+                try {
+                    localStorage.setItem('tolitecno_pwa_installed', 'true');
+                } catch (e) {}
+                return true;
+            }
+
+            try {
+                return localStorage.getItem('tolitecno_pwa_installed') === 'true';
+            } catch (e) {
+                return false;
+            }
+        }
+
+        function mostrarPopupInstalacion() {
+            if (estaInstaladaPWA()) return;
+            document.getElementById('pwaInstallModal').classList.remove('hidden');
+        }
+
+        // Al presionar "Ahora no" solo se oculta en la sesión actual; al reabrir vuelve a aparecer
+        function cerrarPopupInstalacion() {
+            document.getElementById('pwaInstallModal').classList.add('hidden');
+        }
+
+        async function instalarPlataformaPWA() {
+            const iosBox = document.getElementById('pwaIosInstructions');
+            const manualBox = document.getElementById('pwaManualInstructions');
+
+            if (deferredInstallPrompt) {
+                deferredInstallPrompt.prompt();
+                const choiceResult = await deferredInstallPrompt.userChoice;
+                deferredInstallPrompt = null;
+
+                if (choiceResult && choiceResult.outcome === 'accepted') {
+                    try {
+                        localStorage.setItem('tolitecno_pwa_installed', 'true');
+                    } catch (e) {}
+                    cerrarPopupInstalacion();
+                }
+                return;
+            }
+
+            if (esDispositivoIOS()) {
+                manualBox.classList.add('hidden');
+                iosBox.classList.remove('hidden');
+            } else {
+                iosBox.classList.add('hidden');
+                manualBox.classList.remove('hidden');
+            }
+        }
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredInstallPrompt = e;
+            if (!estaInstaladaPWA()) {
+                mostrarPopupInstalacion();
+            }
+        });
+
+        window.addEventListener('appinstalled', () => {
+            deferredInstallPrompt = null;
+            try {
+                localStorage.setItem('tolitecno_pwa_installed', 'true');
+            } catch (e) {}
+            cerrarPopupInstalacion();
+        });
+
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js', { scope: './' })
+                    .then((reg) => console.log('Service Worker activo:', reg.scope))
+                    .catch((err) => console.warn('Error registrando Service Worker:', err));
+            });
+        }
+
+        window.onload = function () {
+            cargarDatos();
+            if (!estaInstaladaPWA()) {
+                setTimeout(mostrarPopupInstalacion, 450);
+            }
+        };
     </script>
 </body>
 </html>
