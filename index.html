@@ -1,18 +1,53 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" prefix="og: https://ogp.me/ns#">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel Administrativo - ToliTecno</title>
+    <meta name="description" content="Panel Administrativo Global de ToliTecno para gestión de usuarios, conductores, viajes y vehículos.">
+    <link rel="canonical" href="https://tolitecnoapp-glitch.github.io/TOLITECNO-ADMIN/">
+
+    <!-- Open Graph / WhatsApp / Facebook / Telegram -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="ToliTecno Admin">
+    <meta property="og:locale" content="es_ES">
+    <meta property="og:url" content="https://tolitecnoapp-glitch.github.io/TOLITECNO-ADMIN/">
+    <meta property="og:title" content="TOLITECNO | Panel Administrativo Global">
+    <meta property="og:description" content="Panel Administrativo Global de ToliTecno para gestión de usuarios, conductores, viajes y vehículos.">
+    <meta property="og:image" content="https://tolitecnoapp-glitch.github.io/TOLITECNO-ADMIN/icon-512.png">
+    <meta property="og:image:secure_url" content="https://tolitecnoapp-glitch.github.io/TOLITECNO-ADMIN/icon-512.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="512">
+    <meta property="og:image:height" content="512">
+    <meta property="og:image:alt" content="Ícono de ToliTecno Panel Administrativo">
+
+    <!-- Schema.org / Respaldo para WhatsApp y buscadores -->
+    <meta itemprop="name" content="TOLITECNO | Panel Administrativo Global">
+    <meta itemprop="description" content="Panel Administrativo Global de ToliTecno para gestión de usuarios, conductores, viajes y vehículos.">
+    <meta itemprop="image" content="https://tolitecnoapp-glitch.github.io/TOLITECNO-ADMIN/icon-512.png">
+
+    <!-- Twitter / X Card -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:url" content="https://tolitecnoapp-glitch.github.io/TOLITECNO-ADMIN/">
+    <meta name="twitter:title" content="TOLITECNO | Panel Administrativo Global">
+    <meta name="twitter:description" content="Panel Administrativo Global de ToliTecno para gestión de usuarios, conductores, viajes y vehículos.">
+    <meta name="twitter:image" content="https://tolitecnoapp-glitch.github.io/TOLITECNO-ADMIN/icon-512.png">
+    <meta name="twitter:image:alt" content="Ícono de ToliTecno Panel Administrativo">
+
     <!-- PWA Meta Tags (Android & iPhone) -->
     <meta name="theme-color" content="#121212">
+    <meta name="msapplication-TileColor" content="#121212">
+    <meta name="msapplication-TileImage" content="https://tolitecnoapp-glitch.github.io/TOLITECNO-ADMIN/icon-512.png">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="ToliTecno Admin">
     <link rel="manifest" href="./manifest.json">
-    <link rel="icon" type="image/png" href="https://i.imgur.com/RvPnAM0.png">
-    <link rel="apple-touch-icon" href="./icon-192.png">
+    <link rel="shortcut icon" type="image/png" href="https://tolitecnoapp-glitch.github.io/TOLITECNO-ADMIN/icon-192.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="./icon-192.png">
+    <link rel="apple-touch-icon" sizes="512x512" href="./icon-512.png">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Supabase JS Client -->
@@ -125,6 +160,21 @@
             transform: translateY(-1px);
             box-shadow: 0 0 28px rgba(249, 199, 48, 0.65);
         }
+
+        @keyframes sectionSlideIn {
+            from {
+                opacity: 0.45;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-dynamic {
+            animation: sectionSlideIn 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+        }
     </style>
 </head>
 <body class="dark-mode min-h-screen relative">
@@ -158,23 +208,23 @@
     <!-- Main Container -->
     <main class="max-w-7xl mx-auto px-4 py-6 space-y-6 relative z-10">
         
-        <!-- Tarjetas de Estadísticas -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div class="custom-card p-4 rounded-2xl border-l-4 border-amber-400">
-                <p class="text-xs uppercase tracking-wider" style="color: var(--muted-text);">Total Usuarios</p>
-                <p id="stat-usuarios" class="text-2xl font-bold mt-1">0</p>
+        <!-- Tarjetas de Estadísticas (4 en fila compactas, visibles sin scroll) -->
+        <div class="grid grid-cols-4 gap-2 sm:gap-3">
+            <div class="custom-card px-2 py-2 sm:px-3.5 sm:py-2.5 rounded-xl border-l-4 border-amber-400 flex flex-col justify-between min-w-0">
+                <p class="text-[9px] sm:text-[11px] uppercase tracking-tight sm:tracking-wider leading-tight" style="color: var(--muted-text);">Total Usuarios</p>
+                <p id="stat-usuarios" class="text-base sm:text-xl font-bold mt-0.5 leading-none">0</p>
             </div>
-            <div class="custom-card p-4 rounded-2xl border-l-4 border-blue-400">
-                <p class="text-xs uppercase tracking-wider" style="color: var(--muted-text);">Total Conductores</p>
-                <p id="stat-conductores" class="text-2xl font-bold mt-1">0</p>
+            <div class="custom-card px-2 py-2 sm:px-3.5 sm:py-2.5 rounded-xl border-l-4 border-blue-400 flex flex-col justify-between min-w-0">
+                <p class="text-[9px] sm:text-[11px] uppercase tracking-tight sm:tracking-wider leading-tight" style="color: var(--muted-text);">Total Conductores</p>
+                <p id="stat-conductores" class="text-base sm:text-xl font-bold mt-0.5 leading-none">0</p>
             </div>
-            <div class="custom-card p-4 rounded-2xl border-l-4 border-emerald-400">
-                <p class="text-xs uppercase tracking-wider" style="color: var(--muted-text);">Total Viajes</p>
-                <p id="stat-viajes" class="text-2xl font-bold mt-1">0</p>
+            <div class="custom-card px-2 py-2 sm:px-3.5 sm:py-2.5 rounded-xl border-l-4 border-emerald-400 flex flex-col justify-between min-w-0">
+                <p class="text-[9px] sm:text-[11px] uppercase tracking-tight sm:tracking-wider leading-tight" style="color: var(--muted-text);">Total Viajes</p>
+                <p id="stat-viajes" class="text-base sm:text-xl font-bold mt-0.5 leading-none">0</p>
             </div>
-            <div class="custom-card p-4 rounded-2xl border-l-4 border-purple-400">
-                <p class="text-xs uppercase tracking-wider" style="color: var(--muted-text);">Vehículos Registrados</p>
-                <p id="stat-vehiculos" class="text-2xl font-bold mt-1">0</p>
+            <div class="custom-card px-2 py-2 sm:px-3.5 sm:py-2.5 rounded-xl border-l-4 border-purple-400 flex flex-col justify-between min-w-0">
+                <p class="text-[9px] sm:text-[11px] uppercase tracking-tight sm:tracking-wider leading-tight" style="color: var(--muted-text);">Vehículos Registrados</p>
+                <p id="stat-vehiculos" class="text-base sm:text-xl font-bold mt-0.5 leading-none">0</p>
             </div>
         </div>
 
@@ -289,6 +339,8 @@
                 <table class="w-full text-left border-collapse">
                     <thead>
                         <tr class="text-xs uppercase tracking-wider">
+                            <th class="p-4">Conductor</th>
+                            <th class="p-4">Teléfono</th>
                             <th class="p-4">Placa</th>
                             <th class="p-4">Vehículo (Marca/Modelo/Año)</th>
                             <th class="p-4">Servicio</th>
@@ -297,6 +349,7 @@
                             <th class="p-4">Tarjeta Propiedad</th>
                             <th class="p-4">Foto Vehículo</th>
                             <th class="p-4">Revisión Técnica</th>
+                            <th class="p-4">Estado / Acción</th>
                         </tr>
                     </thead>
                     <tbody id="tabla-documentos" class="text-sm"></tbody>
@@ -312,6 +365,15 @@
             <button onclick="closeModal()" class="absolute top-4 right-5 text-gray-400 hover:text-white text-2xl font-bold">&times;</button>
             <h3 class="text-lg font-bold text-amber-400 mb-4">Detalle Completo del Registro</h3>
             <div id="modalBody" class="space-y-3 text-sm text-slate-200"></div>
+        </div>
+    </div>
+
+    <!-- Visor de Imagen en Grande (Lightbox) con X para cerrar -->
+    <div id="imageLightboxModal" class="fixed inset-0 bg-black/92 hidden flex items-center justify-center p-4 z-[60] backdrop-blur-md" onclick="cerrarImagenGrande()">
+        <button type="button" aria-label="Cerrar imagen" onclick="event.stopPropagation(); cerrarImagenGrande();" class="fixed top-4 right-5 w-11 h-11 rounded-full bg-white/10 hover:bg-white/25 border border-white/20 text-white text-2xl font-bold flex items-center justify-center transition cursor-pointer z-[61]">&times;</button>
+        <div class="flex flex-col items-center max-w-[95vw] max-h-[90vh]" onclick="event.stopPropagation()">
+            <img id="lightboxImg" src="" alt="Vista ampliada" class="max-w-[95vw] max-h-[84vh] object-contain rounded-xl border border-white/15 shadow-2xl">
+            <span id="lightboxLabel" class="mt-3 text-xs uppercase tracking-wider px-3 py-1 rounded-full bg-white/10 border border-white/10 text-amber-400"></span>
         </div>
     </div>
 
@@ -511,20 +573,111 @@
             `;}).join('');
         }
 
+        function obtenerUsuarioDeDocumento(d) {
+            if (d.usuario_id) {
+                const u = cacheDatos.usuarios.find(item => item.id === d.usuario_id);
+                if (u) return u;
+            }
+            if (d.conductor_id) {
+                const c = cacheDatos.conductores.find(item => item.id === d.conductor_id);
+                if (c && c.usuario_id) {
+                    return cacheDatos.usuarios.find(item => item.id === c.usuario_id);
+                }
+            }
+            return null;
+        }
+
+        async function toggleBloqueoConductor(event, usuarioId, estadoActual, btnEl) {
+            event.stopPropagation();
+            const nuevoEstado = !estadoActual;
+
+            if (btnEl) {
+                btnEl.disabled = true;
+                btnEl.innerText = '...';
+            }
+
+            try {
+                const { data, error } = await supabaseClient
+                    .from('usuarios')
+                    .update({ conductor_activo: nuevoEstado })
+                    .eq('id', usuarioId)
+                    .select();
+
+                if (error) {
+                    console.error('Error al actualizar conductor_activo:', error);
+                    alert('No se pudo cambiar el estado del conductor. Verifica los permisos SQL en Supabase.');
+                    if (btnEl) {
+                        btnEl.disabled = false;
+                        btnEl.innerText = estadoActual ? 'Bloquear' : 'Desbloquear';
+                    }
+                    return;
+                }
+
+                if (!data || !data.length) {
+                    alert('Supabase bloqueó la actualización (RLS). Ejecuta el SQL de políticas proporcionado.');
+                    if (btnEl) {
+                        btnEl.disabled = false;
+                        btnEl.innerText = estadoActual ? 'Bloquear' : 'Desbloquear';
+                    }
+                    return;
+                }
+
+                cacheDatos.usuarios = cacheDatos.usuarios.map(u =>
+                    u.id === usuarioId ? Object.assign({}, u, { conductor_activo: nuevoEstado }) : u
+                );
+
+                filtrarDatos();
+            } catch (err) {
+                console.error('Error inesperado:', err);
+                alert('Error de conexión al actualizar el estado del conductor.');
+                if (btnEl) {
+                    btnEl.disabled = false;
+                    btnEl.innerText = estadoActual ? 'Bloquear' : 'Desbloquear';
+                }
+            }
+        }
+
         function renderDocumentos(data) {
             const tbody = document.getElementById('tabla-documentos');
-            tbody.innerHTML = data.map(d => `
-                <tr onclick="mostrarDetalle(${escaparAtributoJSON(d)})">
-                    <td class="p-4 font-bold text-amber-400">${d.placa || 'Sin placa'}</td>
-                    <td class="p-4" style="color: var(--muted-text);">${d.marca || ''} ${d.modelo || ''} (${d.anio || ''})</td>
-                    <td class="p-4">${d.tipo_servicio || '-'}</td>
-                    <td class="p-4">${d.dni_ce ? '<span class="text-emerald-400 font-semibold">Subido 📄</span>' : '<span class="text-rose-400">Pendiente</span>'}</td>
-                    <td class="p-4">${d.brevete ? '<span class="text-emerald-400 font-semibold">Subido 📄</span>' : '<span class="text-rose-400">Pendiente</span>'}</td>
-                    <td class="p-4">${d.tarjeta_propiedad ? '<span class="text-emerald-400 font-semibold">Subido 📄</span>' : '<span class="text-rose-400">Pendiente</span>'}</td>
+            tbody.innerHTML = data.map(d => {
+                const usuarioDoc = obtenerUsuarioDeDocumento(d);
+                const nombreConductor = usuarioDoc ? (usuarioDoc.nombre || 'Sin nombre') : 'Sin asignar';
+                const telefonoConductor = usuarioDoc ? (usuarioDoc.telefono || '-') : '-';
+                const estaActivo = Boolean(usuarioDoc && usuarioDoc.conductor_activo);
+
+                const detalleDoc = Object.assign({
+                    conductor_nombre: nombreConductor,
+                    conductor_telefono: telefonoConductor,
+                    conductor_activo: usuarioDoc ? estaActivo : 'Desconocido'
+                }, d);
+
+                const accionHtml = usuarioDoc
+                    ? `<div class="flex items-center gap-2">
+                            <span class="inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-md border ${estaActivo ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30' : 'bg-rose-500/15 text-rose-400 border-rose-500/30'}">
+                                <span class="w-1.5 h-1.5 rounded-full ${estaActivo ? 'bg-emerald-400' : 'bg-rose-400'}"></span>
+                                ${estaActivo ? 'Activo' : 'Inactivo'}
+                            </span>
+                            <button type="button" onclick="toggleBloqueoConductor(event, ${usuarioDoc.id}, ${estaActivo}, this)" class="px-3 py-1.5 rounded-lg text-xs font-semibold border transition cursor-pointer disabled:opacity-50 ${estaActivo ? 'bg-rose-500/20 hover:bg-rose-500/35 text-rose-300 border-rose-500/40' : 'bg-emerald-500/20 hover:bg-emerald-500/35 text-emerald-300 border-emerald-500/40'}">
+                                ${estaActivo ? 'Bloquear' : 'Desbloquear'}
+                            </button>
+                       </div>`
+                    : `<span class="text-xs" style="color: var(--muted-text);">Sin usuario</span>`;
+
+                return `
+                <tr onclick="mostrarDetalle(${escaparAtributoJSON(detalleDoc)})">
+                    <td class="p-4 font-medium text-white whitespace-nowrap">${nombreConductor}</td>
+                    <td class="p-4 font-mono whitespace-nowrap" style="color: var(--muted-text);">${telefonoConductor}</td>
+                    <td class="p-4 font-bold text-amber-400 whitespace-nowrap">${d.placa || 'Sin placa'}</td>
+                    <td class="p-4 whitespace-nowrap" style="color: var(--muted-text);">${d.marca || ''} ${d.modelo || ''} (${d.anio || ''})</td>
+                    <td class="p-4 whitespace-nowrap">${d.tipo_servicio || '-'}</td>
+                    <td class="p-4 whitespace-nowrap">${d.dni_ce ? '<span class="text-emerald-400 font-semibold">Subido 📄</span>' : '<span class="text-rose-400">Pendiente</span>'}</td>
+                    <td class="p-4 whitespace-nowrap">${d.brevete ? '<span class="text-emerald-400 font-semibold">Subido 📄</span>' : '<span class="text-rose-400">Pendiente</span>'}</td>
+                    <td class="p-4 whitespace-nowrap">${d.tarjeta_propiedad ? '<span class="text-emerald-400 font-semibold">Subido 📄</span>' : '<span class="text-rose-400">Pendiente</span>'}</td>
                     <td class="p-4">${d.foto_vehiculo ? `<img src="${d.foto_vehiculo}" class="w-12 h-8 object-cover rounded border border-white/10">` : '-'}</td>
-                    <td class="p-4">${d.revision_tecnica ? '<span class="text-emerald-400 font-semibold">Subido 📄</span>' : '-'}</td>
+                    <td class="p-4 whitespace-nowrap">${d.revision_tecnica ? '<span class="text-emerald-400 font-semibold">Subido 📄</span>' : '-'}</td>
+                    <td class="p-4 whitespace-nowrap" onclick="event.stopPropagation()">${accionHtml}</td>
                 </tr>
-            `).join('');
+            `;}).join('');
         }
 
         function filtrarDatos() {
@@ -538,7 +691,18 @@
                 obtenerNombrePasajero(v.pasajero_id).toLowerCase().includes(query) ||
                 obtenerNombreConductor(v.conductor_id).toLowerCase().includes(query)
             );
-            const filtradosD = cacheDatos.documentos.filter(d => (d.placa || '').toLowerCase().includes(query) || (d.marca || '').toLowerCase().includes(query) || (d.modelo || '').toLowerCase().includes(query));
+            const filtradosD = cacheDatos.documentos.filter(d => {
+                const usuarioDoc = obtenerUsuarioDeDocumento(d);
+                const nombreDoc = usuarioDoc ? (usuarioDoc.nombre || '').toLowerCase() : '';
+                const telDoc = usuarioDoc ? (usuarioDoc.telefono || '').toLowerCase() : '';
+                return (
+                    (d.placa || '').toLowerCase().includes(query) ||
+                    (d.marca || '').toLowerCase().includes(query) ||
+                    (d.modelo || '').toLowerCase().includes(query) ||
+                    nombreDoc.includes(query) ||
+                    telDoc.includes(query)
+                );
+            });
 
             renderUsuarios(filtradosU);
             renderConductores(filtradosC);
@@ -546,29 +710,72 @@
             renderDocumentos(filtradosD);
         }
 
+        function abrirImagenGrande(url, label) {
+            document.getElementById('lightboxImg').src = url;
+            document.getElementById('lightboxLabel').innerText = label || '';
+            document.getElementById('imageLightboxModal').classList.remove('hidden');
+        }
+
+        function cerrarImagenGrande() {
+            document.getElementById('imageLightboxModal').classList.add('hidden');
+            document.getElementById('lightboxImg').src = '';
+        }
+
         function mostrarDetalle(objeto) {
             const modalBody = document.getElementById('modalBody');
             modalBody.innerHTML = Object.entries(objeto).map(([key, value]) => {
-                let valHtml = value;
                 if (typeof value === 'string' && (value.startsWith('http://') || value.startsWith('https://'))) {
-                    valHtml = `<a href="${value}" target="_blank" class="text-amber-400 underline break-all">${value}</a><br><img src="${value}" class="mt-2 max-h-40 rounded border border-white/10">`;
+                    return `<div class="p-2 bg-white/5 rounded-lg border border-white/5">
+                        <strong class="text-amber-400">${key}:</strong>
+                        <div class="mt-2">
+                            <img src="${value}" alt="${key}" title="Clic para ampliar imagen" onclick="event.stopPropagation(); abrirImagenGrande(${escaparAtributoJSON(value)}, ${escaparAtributoJSON(key)})" class="max-h-44 rounded-lg border border-white/15 hover:border-amber-400 transition cursor-zoom-in shadow-md">
+                        </div>
+                    </div>`;
                 }
-                return `<div class="p-2 bg-white/5 rounded-lg border border-white/5"><strong class="text-amber-400">${key}:</strong> <span class="break-all">${valHtml}</span></div>`;
+                const texto = (value !== null && typeof value === 'object') ? JSON.stringify(value) : value;
+                return `<div class="p-2 bg-white/5 rounded-lg border border-white/5"><strong class="text-amber-400">${key}:</strong> <span class="break-all">${texto}</span></div>`;
             }).join('');
             document.getElementById('infoModal').classList.remove('hidden');
         }
 
         function switchTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-content').forEach(el => {
+                el.classList.add('hidden');
+                el.classList.remove('section-dynamic');
+            });
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
 
-            document.getElementById(`sec-${tabName}`).classList.remove('hidden');
+            const sec = document.getElementById(`sec-${tabName}`);
+            sec.classList.remove('hidden');
+            void sec.offsetWidth;
+            sec.classList.add('section-dynamic');
             document.getElementById(`btn-${tabName}`).classList.add('active');
+
+            requestAnimationFrame(() => {
+                const header = document.querySelector('header');
+                const headerHeight = header ? header.getBoundingClientRect().height : 72;
+                const top = sec.getBoundingClientRect().top + window.scrollY - headerHeight - 16;
+                window.scrollTo({
+                    top: Math.max(0, top),
+                    behavior: 'smooth'
+                });
+            });
         }
 
         function closeModal() {
             document.getElementById('infoModal').classList.add('hidden');
         }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                const lb = document.getElementById('imageLightboxModal');
+                if (lb && !lb.classList.contains('hidden')) {
+                    cerrarImagenGrande();
+                } else {
+                    closeModal();
+                }
+            }
+        });
 
         // ============================================================
         // PWA: Registro Service Worker + Popup de Instalación (Android & iPhone)
